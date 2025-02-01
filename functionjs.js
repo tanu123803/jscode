@@ -8,4 +8,3 @@ addtwonumbers()
 x=10
 y=14
 console.log(x+y);
-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
