@@ -1,0 +1,10 @@
+# 🚦 Traffic Light System (State Design Pattern)
+
+This project implements a **Traffic Light System** using the **State Design Pattern** in JavaScript.
+
+## 🧩 States
+- **Red** — Vehicles must stop.
+- **Green** — Vehicles can move.
+- **Yellow** — Vehicles should slow down.
+
+Transitions follow this loop:
