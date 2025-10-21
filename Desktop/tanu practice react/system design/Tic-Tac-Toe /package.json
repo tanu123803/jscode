@@ -1,0 +1,12 @@
+{
+  "name": "tictactoe-diagonal-lock",
+  "version": "1.0.0",
+  "description": "Console Tic-Tac-Toe with diagonal lock rule",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
+}
