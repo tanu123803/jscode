@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meals — Fetch, Sort & Filter</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Meals Explorer</h1>
+
+      <div class="controls">
+        <input id="searchInput" type="text" placeholder="Search by name or category..." />
+
+        <select id="sortSelect">
+          <option value="">Sort — Select</option>
+          <optgroup label="Name">
+            <option value="name-asc">Name A → Z</option>
+            <option value="name-desc">Name Z → A</option>
+          </optgroup>
+          <optgroup label="Area">
+            <option value="area-asc">Area A → Z</option>
+            <option value="area-desc">Area Z → A</option>
+          </optgroup>
+          <optgroup label="Category">
+            <option value="category-asc">Category A → Z</option>
+            <option value="category-desc">Category Z → A</option>
+          </optgroup>
+        </select>
+
+        <button id="resetBtn">Reset</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="cardsContainer" class="cards"></div>
+      <div id="noResult" class="no-result" hidden>No results found.</div>
+    </main>
+
+    <footer>
+      <small>Fetched from TheMealDB example (free API)</small>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
