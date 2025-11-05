@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Movie Explorer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Movie Explorer</h1>
+    <p class="subtitle">Search movies (debounced) and browse pages (throttled)</p>
+  </header>
+
+  <main class="container" id="main">
+    <section class="controls" aria-label="Search and pagination controls">
+      <label for="search" class="visually-hidden">Search movies</label>
+      <input id="search" type="search" placeholder="Search movies..." autocomplete="off" 
+             aria-label="Search movies" />
+
+      <div class="pagination" role="navigation" aria-label="Pagination">
+        <button id="prevBtn" aria-label="Previous page">Previous</button>
+        <span id="pageNumber" aria-live="polite">Page 1</span>
+        <button id="nextBtn" aria-label="Next page">Next</button>
+      </div>
+    </section>
+
+    <section id="status" class="status" aria-live="polite"></section>
+
+    <section id="movies" class="movies-grid" aria-label="Movie results"></section>
+
+    <div id="loading" class="loading" aria-hidden="true">
+      <div class="spinner" role="status" aria-hidden="true"></div>
+      <span class="loading-text">Loading...</span>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <small>Built with vanilla JavaScript • OMDb API</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
