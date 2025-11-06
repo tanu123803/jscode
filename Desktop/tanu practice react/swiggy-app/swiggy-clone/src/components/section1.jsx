@@ -1,70 +1,134 @@
 import React, { useRef, useState, useEffect } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { CDN_URL, DATA_URL,  } from "../utilis/constant";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CDN_URL, DATA_URL } from "../utilis/constant";
 
 const Section1 = () => {
   const [resList, setResList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
   const scrollRef = useRef(null);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  async function fetchData() {
-    const data = await fetch(DATA_URL);
-    const res = await data.json();
-    const items =
-      res?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.info || [];
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        setShowLeftArrow(scrollLeft > 0);
+        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+      }
+    };
 
-    setResList(items);
+    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener("scroll", handleScroll);
+      handleScroll(); // Initial check
+    }
+
+    return () => {
+      if (scrollElement) {
+        scrollElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [resList]);
+
+  async function fetchData() {
+    try {
+      setIsLoading(true);
+      const data = await fetch(DATA_URL);
+      const res = await data.json();
+      const items =
+        res?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.info || [];
+
+      setResList(items);
+    } catch (exception) {
+      console.log("error", exception);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const scroll = (direction) => {
     if (scrollRef.current) {
+      const scrollAmount = window.innerWidth < 640 ? 200 : 400;
       scrollRef.current.scrollBy({
-        left: direction === "left" ? -300 : 300,
+        left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
     }
   };
 
   return (
-    <div className="px-6 py-4 max-w-[1200px] m-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">What's on your mind?</h2>
-        <div className="flex gap-2">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
+          What's on your mind?
+        </h2>
+        <div className="hidden sm:flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="w-8 h-8 bg-gray-300 rounded-full shadow-md flex justify-center items-center"
+            disabled={!showLeftArrow}
+            className={`w-9 h-9 rounded-full shadow-md flex justify-center items-center transition-all duration-200 ${
+              showLeftArrow
+                ? "bg-gray-300 hover:bg-gray-400 cursor-pointer"
+                : "bg-gray-100 cursor-not-allowed opacity-50"
+            }`}
+            aria-label="Scroll left"
           >
-            <ArrowLeft />
+            <ChevronLeft size={20} className="text-gray-700" />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="w-8 h-8 bg-gray-300 rounded-full shadow-md flex justify-center items-center"
+            disabled={!showRightArrow}
+            className={`w-9 h-9 rounded-full shadow-md flex justify-center items-center transition-all duration-200 ${
+              showRightArrow
+                ? "bg-gray-300 hover:bg-gray-400 cursor-pointer"
+                : "bg-gray-100 cursor-not-allowed opacity-50"
+            }`}
+            aria-label="Scroll right"
           >
-            <ArrowRight />
+            <ChevronRight size={20} className="text-gray-700" />
           </button>
         </div>
       </div>
 
-      <div className="relative flex items-center bg-gray-100">
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-auto gap-6 scrollbar-hide px-12 bg-gray-100"
-        >
-          {resList.map((ele) => (
-            <div key={ele.id || ele.imageId} className="min-w-[120px]">
-              <img
-                src={`${CDN_URL}${ele.imageId}`}
-                alt={ele.action?.text || "item"}
-                className="w-28 h-28 object-cover rounded-lg"
-              />
-              <p className="text-center text-sm mt-1">{ele.action?.text}</p>
-            </div>
-          ))}
+      {/* Carousel */}
+      {isLoading ? (
+        <div className="flex items-center justify-center h-40">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-orange-500 border-t-transparent"></div>
         </div>
-      </div>
+      ) : (
+        <div className="relative">
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 pb-4 scrollbar-hide scroll-smooth"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {resList.map((ele) => (
+              <div
+                key={ele.id || ele.imageId}
+                className="flex-shrink-0 cursor-pointer group transition-transform duration-200 hover:scale-105"
+              >
+                <div className="w-28 h-28 sm:w-32 sm:h-32 lg:w-36 lg:h-36">
+                  <img
+                    src={`${CDN_URL}${ele.imageId}`}
+                    alt={ele.action?.text || "Food item"}
+                    className="w-full h-full object-cover rounded-full transition-all duration-200"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+/* Custom Scrollbar Hiding */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scrolling */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Custom focus states */
+*:focus-visible {
+  outline: 2px solid #ff5722;
+  outline-offset: 2px;
+}
